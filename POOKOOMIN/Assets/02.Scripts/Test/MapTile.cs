@@ -7,7 +7,6 @@ namespace Pookoomin.Map
 {
     public class MapTile : MonoBehaviour
     {
-
         [Header("Map Settings")]
         [Tooltip("¡‹ ∑π∫ß")]
         [Range(1, 20)]
@@ -25,13 +24,17 @@ namespace Pookoomin.Map
         public double longitude = 35.000;
         public string strAPIKey = "";
 
-        private void Start()
+        private void Awake()
         {
             mapRawImage = GetComponent<RawImage>();
+        }
+
+        private void Start()
+        {
             StartCoroutine(LoadMap());
         }
 
-        IEnumerator LoadMap()
+        private IEnumerator LoadMap()
         {
             string url = strBaseURL + "center=" + latitude + "," + longitude +
                 "&zoom=" + zoomLevel.ToString() + "&size=" + size.ToString() + "x" +
@@ -46,8 +49,6 @@ namespace Pookoomin.Map
             yield return req.SendWebRequest();
 
             mapRawImage.texture = DownloadHandlerTexture.GetContent(req);
-
-
         }
     }
 }
