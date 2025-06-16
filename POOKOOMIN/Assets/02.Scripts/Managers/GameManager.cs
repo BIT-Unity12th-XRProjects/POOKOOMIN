@@ -5,6 +5,8 @@ using System;
 using UnityEngine.EventSystems;
 using FoodyGo.Singletons;
 using FoodyGo.Controllers;
+using FoodyGo.UI;
+using Pookoomin.UI;
 
 namespace FoodyGo.Managers
 {
@@ -21,6 +23,11 @@ namespace FoodyGo.Managers
         private Scene SplashScene;
         private Scene MapScene;
         private Scene CatchScene;
+
+        #region Test
+        //@tk : user Data 임시로 넣음. 관리
+        UserWorkData userWorkData;
+        #endregion
 
         // Use this for initialization
         IEnumerator Start()
@@ -40,6 +47,15 @@ namespace FoodyGo.Managers
             if (scene.name == MapSceneName)
             {
                 MapScene = scene;
+
+                #region Test
+                userWorkData = new UserWorkData();
+                userWorkData.stepCount.Value = 10;
+                userWorkData.coin.Value = 100;
+                #endregion
+
+                Pookoomin.UI.UIManager.instance.OpenUI<UICameraButtonsController, UICameraButtonsView, object>(null);
+                Pookoomin.UI.UIManager.instance.OpenUI<UIUserWorkDataController, UIUserWorkDataView, UserWorkData>(userWorkData);
             }
             else if (scene.name == CatchSceneName)
             {
