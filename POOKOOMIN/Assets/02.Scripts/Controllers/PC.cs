@@ -36,7 +36,7 @@ namespace FoodyGo.Controllers
         IEnumerator Start()
         {
             yield return new WaitUntil(() => _mapTileManager.isInitialized);
-            transform.position = _mapTileManager.GetCenterTileWorldPosition();
+            //transform.position = _mapTileManager.GetCenterTileWorldPosition();
         }
 
         private void OnEnable()

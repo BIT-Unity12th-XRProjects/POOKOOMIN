@@ -40,7 +40,6 @@ namespace FoodyGo.Services.GPS
         public MapLocation mapOrigin; 
         public MapLocation mapCenter;
         public MapEnvelope mapEnvelope;
-        public Vector3 mapWorldCenter;
         public Vector2 mapScale;
 
         private ILocationProvider _locationProvider;
@@ -95,22 +94,8 @@ namespace FoodyGo.Services.GPS
         {
             mapCenter.latitude = latitude;
             mapCenter.longitude = longitude;
-            mapWorldCenter.x = GoogleMapUtils.LonToX(mapCenter.longitude);
-            mapWorldCenter.y = GoogleMapUtils.LatToY(mapCenter.latitude);
-
-            mapScale.x = (float)GoogleMapUtils.CalculateScaleX(latitude, mapTileSizePixels, mapTileScale, mapTileZoomLevel);
-            mapScale.y = (float)GoogleMapUtils.CalculateScaleY(longitude, mapTileSizePixels, mapTileScale, mapTileZoomLevel);
-
-            var lon1 = GoogleMapUtils.AdjustLonByPixels(longitude, -mapTileSizePixels / 2, mapTileZoomLevel);
-            var lat1 = GoogleMapUtils.AdjustLatByPixels(latitude, mapTileSizePixels / 2, mapTileZoomLevel);
-
-            var lon2 = GoogleMapUtils.AdjustLonByPixels(longitude, mapTileSizePixels / 2, mapTileZoomLevel);
-            var lat2 = GoogleMapUtils.AdjustLatByPixels(latitude, -mapTileSizePixels / 2, mapTileZoomLevel);
-
-            mapEnvelope = new MapEnvelope((float)lon1, (float)lat1, (float)lon2, (float)lat2);
-
+           
             onMapRedraw?.Invoke();
         }
-
     }
 }

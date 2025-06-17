@@ -75,26 +75,17 @@ namespace FoodyGo.Services.GPS
 
             Vector3 currentPosition = target.position;
 
-            double meterToDegreeLatitude = 1.0 / _metersPerDegreeLatitude;
-            double meterToDegreeLongitude = 1.0 / (_metersPerDegreeLatitude * Math.Cos(startLocation.latitude * Mathf.Deg2Rad));
-
-            double deltaLatitude = currentPosition.z * meterToDegreeLatitude;
-            double deltaLongitude = currentPosition.x * meterToDegreeLongitude;
-
-            double newLatitude = startLocation.latitude + deltaLatitude;
-            double newLongitude = startLocation.longitude + deltaLongitude;
-
-            latitude = newLatitude;
-            longitude = newLongitude;
+            latitude = GoogleMapUtils.UnityYToLat(currentPosition.z, startLocation.latitude, 18);
+            longitude = GoogleMapUtils.UnityXToLon(currentPosition.x, startLocation.longitude, 18);
 
             onLocationUpdated?.Invoke(
-                newLatitude,
-                newLongitude,
+                latitude,
+                longitude,
                 0,
                 1f,
                 DateTime.Now.Ticks
                 );
-            Debug.Log($"GPS 시뮬레이션 데이터 갱신됨, Lat:{newLatitude}, Lng:{newLongitude}");
+            Debug.Log($"GPS 시뮬레이션 데이터 갱신됨, Lat:{latitude}, Lng:{longitude}");
         }
     }
 }

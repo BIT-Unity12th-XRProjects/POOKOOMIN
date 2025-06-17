@@ -40,7 +40,7 @@ namespace FoodyGo.Mapping
             double centerPx = LonToX(centerLon) >> shift;
             double deltaPx = px - centerPx;
 
-            return (float)(deltaPx * UNITY_UNITS_PER_PIXEL);
+            return (float)(-deltaPx * UNITY_UNITS_PER_PIXEL);
         }
 
         public static float LatToUnityY(double lat, double centerLat, int zoom)
@@ -53,6 +53,49 @@ namespace FoodyGo.Mapping
             return (float)(deltaPx * UNITY_UNITS_PER_PIXEL);
         }
 
+        /// <summary>
+        /// Unity 상에서 X축(Units) 오프셋을 받아, 중심 경도(centerLon) 기준으로 실제 경도(°)를 계산해 반환합니다.
+        /// </summary>
+        /// <param name="unityX">Unity 단위(X) 오프셋</param>
+        /// <param name="centerLon">중심 경도(°)</param>
+        /// <param name="zoom">줌 레벨 (0~21)</param>
+        public static double UnityXToLon(float unityX, double centerLon, int zoom)
+        {
+            unityX = -unityX; // 구글맵좌표와 x 가 반대ㄴ
+
+            int shift = 21 - zoom;
+            // Unity Units → 픽셀(delta)로 변환
+            double deltaPx = unityX / UNITY_UNITS_PER_PIXEL;
+            // 중심 경도의 zoom=21 픽셀 좌표를 shift 적용해 zoom 레벨 픽셀로 변환
+            double centerPx = LonToX(centerLon) >> shift;
+            // 원하는 픽셀 좌표
+            double px = centerPx + deltaPx;
+            // 다시 zoom=21 픽셀 축척으로 복원
+            double x21 = px * (1 << shift);
+            // Mercator 역변환
+            return XToLon(x21);
+        }
+
+        /// <summary>
+        /// Unity 상에서 Y축(Units) 오프셋을 받아, 중심 위도(centerLat) 기준으로 실제 위도(°)를 계산해 반환합니다.
+        /// </summary>
+        /// <param name="unityY">Unity 단위(Y) 오프셋</param>
+        /// <param name="centerLat">중심 위도(°)</param>
+        /// <param name="zoom">줌 레벨 (0~21)</param>
+        public static double UnityYToLat(float unityY, double centerLat, int zoom)
+        {
+            int shift = 21 - zoom;
+            // Unity Units → 픽셀(delta)로 변환
+            double deltaPy = unityY / UNITY_UNITS_PER_PIXEL;
+            // 중심 위도의 zoom=21 픽셀 좌표를 shift 적용해 zoom 레벨 픽셀로 변환
+            double centerPy = LatToY(centerLat) >> shift;
+            // 원하는 픽셀 좌표
+            double py = centerPy + deltaPy;
+            // 다시 zoom=21 픽셀 축척으로 복원
+            double y21 = py * (1 << shift);
+            // Mercator 역변환
+            return YToLat(y21);
+        }
 
         /// <summary>
         /// 경도(lon, °)를 “zoom = 21” 머카토르 픽셀 X 좌표(정수)로 변환합니다.

@@ -41,16 +41,9 @@ namespace FoodyGo.Mapping
 
         public void RefreshMapTile()
         {
-            // 오프셋에따른 중심위치 계산
-            tileCenterLocation.latitude = GoogleMapUtils.AdjustLatByPixels(
-                worldCenterLocation.latitude,
-                (int)(size * tileOffset.y),
-                zoomLevel);
-
-            tileCenterLocation.longitude = GoogleMapUtils.AdjustLonByPixels(
-                worldCenterLocation.longitude,
-                (int)(size * tileOffset.x),
-                zoomLevel);
+            double lon = GoogleMapUtils.UnityXToLon(transform.position.x, worldCenterLocation.longitude, zoomLevel);
+            double lat = GoogleMapUtils.UnityYToLat(transform.position.z, worldCenterLocation.latitude, zoomLevel);
+            tileCenterLocation = new MapLocation(lat, lon);
 
             // 맵 텍스쳐 요청
             googleStaticMapService.LoadMap(tileCenterLocation.latitude,

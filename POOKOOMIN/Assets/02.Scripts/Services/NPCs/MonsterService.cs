@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using FoodyGo.Database;
 using FoodyGo.Utils;
 using FoodyGo.Services.GPS;
-using System.Threading;
 
 namespace FoodyGo.Services
 {
@@ -33,7 +32,7 @@ namespace FoodyGo.Services
         public List<Monster> monsters;
 
         [SerializeField] GoogleMapTileManager _googleMapTileManager;
-
+        [SerializeField] GPSLocationService _gpsLocationService;
         // Use this for initialization
         void Start()
         {
@@ -49,7 +48,12 @@ namespace FoodyGo.Services
             {
                 if (m.gameObject != null)
                 {
-                    var newPosition = ConvertToWorldSpace((float)m.location.longitude, (float)m.location.latitude);
+                    var newPosition = new Vector3(
+                        (float)GoogleMapUtils.LonToUnityX
+                        (m.location.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.mapTileZoomLevel),
+                        0,
+                        (float)GoogleMapUtils.LatToUnityY
+                        (m.location.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.mapTileZoomLevel));
                     m.gameObject.transform.position = newPosition;
                 }
             }
@@ -154,16 +158,16 @@ namespace FoodyGo.Services
             return 4;
         }
 
-        private Vector3 ConvertToWorldSpace(float longitude, float latitude)
-        {
-            return _googleMapTileManager.GetWorldPosition(latitude, longitude);
-        }
-
         private void SpawnMonster(Monster monster)
         {
             var lon = monster.location.longitude;
             var lat = monster.location.latitude;
-            var position = ConvertToWorldSpace((float)lon, (float)lat);
+            var position = new Vector3(
+                        (float)GoogleMapUtils.LonToUnityX
+                        (lon, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.mapTileZoomLevel),
+                        0,
+                        (float)GoogleMapUtils.LatToUnityY
+                        (lat, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.mapTileZoomLevel));
             var rotation = Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up);
             monster.gameObject = (GameObject)Instantiate(monsterPrefab, position, rotation);
         }
