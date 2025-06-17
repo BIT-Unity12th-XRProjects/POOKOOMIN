@@ -2,16 +2,26 @@ using FoodyGo.Mapping;
 using FoodyGo.Services.GPS;
 using FoodyGo.UI;
 using FoodyGo.Utils.DI;
+using System;
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 namespace FoodyGo.Controllers
 {
+    /// <summary>
+    /// PlayerController
+    /// </summary>
     public class PC : MonoBehaviour
     {
         [SerializeField] LayerMask _battleMask;
+
+        /// <summary>
+        /// 움직임 이벤트 : 파라미터는 움직임 값
+        /// </summary>
+        public event Action<float> OnMovement; 
 
 #if UNITY_EDITOR
         public Vector3 velocity;
@@ -47,11 +57,13 @@ namespace FoodyGo.Controllers
         {
             Vector2 input2D = context.ReadValue<Vector2>();
             direction = new Vector3(input2D.x, 0f, input2D.y);
+            OnMovement?.Invoke(input2D.sqrMagnitude);
         }
 
         private void OnMoveCanceled(InputAction.CallbackContext context)
         {
             direction = Vector3.zero;
+            OnMovement?.Invoke(0f);
         }
 
         private void FixedUpdate()
@@ -68,6 +80,10 @@ namespace FoodyGo.Controllers
             {
                 velocity = moveDir.normalized * speed;
                 transform.Translate(velocity * Time.fixedDeltaTime, Space.World);
+
+                Vector3 lookDir = new Vector3(moveDir.x, 0f, moveDir.z);
+                Quaternion targetRot = Quaternion.LookRotation(lookDir, Vector3.up);
+                transform.rotation = targetRot;
             }
             else
             {
@@ -75,6 +91,9 @@ namespace FoodyGo.Controllers
             }
         }
 #elif UNITY_ANDROID
+                
+        private Vector3 _prevPosition;
+
         [Inject] GPSLocationService _gpsLocationService;
 
         private void FixedUpdate()
@@ -84,6 +103,19 @@ namespace FoodyGo.Controllers
             float z = GoogleMapUtils.LatToUnityY(_gpsLocationService.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.mapTileZoomLevel);
 
             transform.position = new Vector3(x, 0f, z);
+
+            _prevPosition = transform.position;
+            Vector3 newPosition = new Vector3(x, 0f, z);
+
+            float moveSpeed = (newPosition - _prevPosition).magnitude / Time.fixedDeltaTime;
+            
+            //@TK(25.06.17) Check 빌드에서 애니메이션 잘 나오는지
+            OnMovement?.Invoke(moveSpeed);
+
+            transform.position = newPosition;
+            _prevPosition = newPosition;
+
+            //TODO : 어떻게 LookAt 할 것인가
         }
 #endif
 
