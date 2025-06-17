@@ -61,7 +61,7 @@ namespace FoodyGo.Managers
                 PlaceMarkerController marker = Instantiate(_markerPrefab);
                 marker.RefreshPlace(place.name);
                 marker.transform.position
-                    = new Vector3(GoogleMapUtils.LonToUnityX(place.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.mapTileZoomLevel), 0f, GoogleMapUtils.LatToUnityY(place.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.mapTileZoomLevel));
+                    = new Vector3(GoogleMapUtils.LonToUnityX(place.longitude, _gpsLocationService.mapCenter.longitude, _gpsLocationService.mapTileZoomLevel), 0f, GoogleMapUtils.LatToUnityY(place.latitude, _gpsLocationService.mapCenter.latitude, _gpsLocationService.mapTileZoomLevel));
                 _markers.Add(marker);
             }
         }
