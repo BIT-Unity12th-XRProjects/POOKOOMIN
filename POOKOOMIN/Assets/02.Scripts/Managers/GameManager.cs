@@ -26,7 +26,7 @@ namespace FoodyGo.Managers
 
         #region Test
         //@tk : user Data 임시로 넣음. 관리
-        UserWorkData userWorkData;
+        public UserWorkData userWorkData;
         #endregion
 
         // Use this for initialization
@@ -50,11 +50,11 @@ namespace FoodyGo.Managers
 
                 #region Test
                 userWorkData = new UserWorkData();
-                userWorkData.stepCount.Value = 10;
-                userWorkData.coin.Value = 100;
+                userWorkData.stepCount.Value = 0;
+                userWorkData.coin.Value = 0;
                 #endregion
 
-                Pookoomin.UI.UIManager.instance.OpenUI<UICameraButtonsController, UICameraButtonsView, object>(null);
+                // Pookoomin.UI.UIManager.instance.OpenUI<UICameraButtonsController, UICameraButtonsView, object>(null);
                 Pookoomin.UI.UIManager.instance.OpenUI<UIUserWorkDataController, UIUserWorkDataView, UserWorkData>(userWorkData);
             }
             else if (scene.name == CatchSceneName)

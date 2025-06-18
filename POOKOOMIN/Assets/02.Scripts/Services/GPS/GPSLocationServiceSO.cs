@@ -18,8 +18,8 @@ public class GPSLocationServiceSO : ScriptableObject
     [field: SerializeField]
     public int mapTileZoomLevel { get; private set; } = 15;
 
-    [Space(20)]
 #if UNITY_EDITOR
+    [Space(20)]
     [Header("Simulated")]
     [Tooltip("시뮬레이션 시 시작 위치")] //@tk : Default : 강남 비트 건물 좌표
     public MapLocation simulationStartLocation = new MapLocation(37.4946, 127.0276056);
