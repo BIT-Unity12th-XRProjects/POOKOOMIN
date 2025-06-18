@@ -1,14 +1,11 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using FoodyGo.Managers;
 
-
 namespace Pookoomin.Pedometer
 {
-
     public class StepCounter : MonoBehaviour
-    {   
+    {
         [Header("StepCounterSO")]
         public StepCounterSO stepCounterSO;
 
@@ -47,10 +44,10 @@ namespace Pookoomin.Pedometer
 
             if (Accelerometer.current != null)
             {
-                Vector3 acceleration = Accelerometer.current.acceleration.ReadValue();                
+                Vector3 acceleration = Accelerometer.current.acceleration.ReadValue();
 
                 // Y축(또는 Z축) 변화만 사용
-                float axisDelta = Mathf.Abs(acceleration.y - _prevAcceleration.y);
+                float axisDelta = Mathf.Abs(acceleration.z - _prevAcceleration.z);
 
                 if (axisDelta > 1.0f && (Time.time - _lastStepTime) > stepCounterSO.stepDelay) // 흔들림 임계값 설정
                 {
