@@ -50,10 +50,10 @@ namespace FoodyGo.Services
                 {
                     var newPosition = new Vector3(
                         (float)GoogleMapUtils.LonToUnityX
-                        (m.location.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.mapTileZoomLevel),
+                        (m.location.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.ZoomLevel),
                         0,
                         (float)GoogleMapUtils.LatToUnityY
-                        (m.location.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.mapTileZoomLevel));
+                        (m.location.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.ZoomLevel));
                     m.gameObject.transform.position = newPosition;
                 }
             }
@@ -164,10 +164,10 @@ namespace FoodyGo.Services
             var lat = monster.location.latitude;
             var position = new Vector3(
                         (float)GoogleMapUtils.LonToUnityX
-                        (lon, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.mapTileZoomLevel),
+                        (lon, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.ZoomLevel),
                         0,
                         (float)GoogleMapUtils.LatToUnityY
-                        (lat, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.mapTileZoomLevel));
+                        (lat, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.ZoomLevel));
             var rotation = Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up);
             monster.gameObject = (GameObject)Instantiate(monsterPrefab, position, rotation);
         }

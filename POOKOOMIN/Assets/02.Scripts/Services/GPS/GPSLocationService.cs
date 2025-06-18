@@ -8,32 +8,21 @@ namespace FoodyGo.Services.GPS
 {
     public class GPSLocationService : MonoBehaviour
     {
+        [SerializeField] private GPSLocationServiceSO _serviceData;
+
         public bool isReady { get; private set; }
-
-        [Header("Map Tile Settings")]
-        [Tooltip("맵 타일 스케일")]
-        [field: SerializeField]
-        public int mapTileScale { get; private set; } = 1;
-
-        [Tooltip("맵 타일 크기 (픽셀)")]
-        [field: SerializeField]
-        public int mapTileSizePixels { get; private set; } = 640;
-
-        [Tooltip("맵 타일 Zoom 레벨 (1 ~ 20)")]
-        [Range(1, 20)]
-        [field: SerializeField]
-        public int mapTileZoomLevel { get; private set; } = 15;
 
         [Header("Simulation Settings (Editor Only)")]
         [SerializeField] bool _isSimulation;
         [SerializeField] Transform _simulationTarget;
-        [SerializeField] MapLocation _simulationStartLocation = new MapLocation(37.4946, 127.0276056);
 
         public double latitude { get; private set; }
         public double longitude { get; private set; }
         public double altitude { get; private set; }
         public float accuracy { get; private set; }
         public double timeStamp { get; private set; }
+
+        public int ZoomLevel => _serviceData.mapTileZoomLevel;
 
         public event Action onMapRedraw;
 
@@ -49,7 +38,8 @@ namespace FoodyGo.Services.GPS
 #if UNITY_EDITOR
             SimulatedLocationProvider simulatedLocationProvider = gameObject.AddComponent<SimulatedLocationProvider>();
             simulatedLocationProvider.target = _simulationTarget;
-            simulatedLocationProvider.startLocation = _simulationStartLocation;
+            simulatedLocationProvider.zoomLevel = _serviceData.mapTileZoomLevel;
+            simulatedLocationProvider.startLocation = _serviceData.simulationStartLocation;
             _locationProvider = simulatedLocationProvider;
             timeStamp = Epoch.Now;
 #else

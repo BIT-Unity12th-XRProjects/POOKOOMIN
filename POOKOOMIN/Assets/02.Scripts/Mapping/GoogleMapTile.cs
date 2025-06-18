@@ -60,5 +60,15 @@ namespace FoodyGo.Mapping
 
             _renderer.material.mainTexture = texture;
         }
+
+        private readonly int TILE_WORLD_SIZE = 100;
+        /// <summary>
+        /// Tile 영역 선으로 그리기
+        /// </summary>
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireCube(transform.position, new Vector3(TILE_WORLD_SIZE, 1f, TILE_WORLD_SIZE));
+        }
     }
 }

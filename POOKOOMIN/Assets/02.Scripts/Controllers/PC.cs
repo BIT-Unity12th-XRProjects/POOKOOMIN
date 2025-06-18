@@ -98,9 +98,9 @@ namespace FoodyGo.Controllers
 
         private void FixedUpdate()
         {
-            float x = GoogleMapUtils.LonToUnityX(_gpsLocationService.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.mapTileZoomLevel);
+            float x = GoogleMapUtils.LonToUnityX(_gpsLocationService.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.ZoomLevel);
 
-            float z = GoogleMapUtils.LatToUnityY(_gpsLocationService.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.mapTileZoomLevel);
+            float z = GoogleMapUtils.LatToUnityY(_gpsLocationService.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.ZoomLevel);
 
             transform.position = new Vector3(x, 0f, z);
 

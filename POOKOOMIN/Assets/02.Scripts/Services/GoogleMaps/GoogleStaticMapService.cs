@@ -7,10 +7,9 @@ namespace FoodyGo.Services.GoogleMaps
 {
     public class GoogleStaticMapService : MonoBehaviour
     {
-        private const string BASE_URL = "https://maps.googleapis.com/maps/api/staticmap?";
-        private const string API_KEY = "AIzaSyDqYVb-C0TTNAtDfewlZKnMmqYql9nLDss";
-        private Texture2D _cachedTexture;
+        [SerializeField] private GoogleStaticMapServiceSO _serviceData;
 
+        private Texture2D _cachedTexture;
 
         public void LoadMap(double latitude, double longitude, float zoom, Vector2 size, Action<Texture2D> onComplete)
         {
@@ -20,11 +19,11 @@ namespace FoodyGo.Services.GoogleMaps
         IEnumerator C_LoadMap(double latitude, double longitude, float zoom, Vector2 size, Action<Texture2D> onComplete)
         {
             string url =
-                BASE_URL +
+                _serviceData.BASE_URL +
                 "center=" + latitude + "," + longitude +
                 "&zoom=" + zoom +
                 "&size=" + size.x + "x" + size.y +
-                "&key=" + API_KEY;
+                "&key=" + _serviceData.API_KEY;
 
             Debug.Log($"[{nameof(GoogleStaticMapService)}] : Request map texture ... {url}");
 
