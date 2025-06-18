@@ -990,6 +990,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Mobile",
+            "id": "f0864ed3-704f-4a9a-91c0-cf6566cf90d2",
+            "actions": [
+                {
+                    "name": "StepCounter",
+                    "type": "Value",
+                    "id": "bc692d15-03ad-4cd6-89aa-8338501ab9b2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "30d8bf03-1dc5-4022-b5d1-3ba1d34a8da6",
+                    "path": "<Accelerometer>/acceleration",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StepCounter",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
