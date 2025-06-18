@@ -57,10 +57,10 @@ namespace FoodyGo.Mapping
         Vector2Int CalcTileIndex(MapLocation loc)
         {
             float x = (float)GoogleMapUtils.LonToUnityX(
-                loc.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.mapTileZoomLevel);
+                loc.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.ZoomLevel);
 
             float z = (float)GoogleMapUtils.LatToUnityY(
-                loc.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.mapTileZoomLevel);
+                loc.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.ZoomLevel);
 
             return new Vector2Int(HalfFloor(x), HalfFloor(z));
         }
@@ -90,7 +90,7 @@ namespace FoodyGo.Mapping
                     tile.tileOffset = new Vector2Int(i - 1, j - 1);
                     tile.googleStaticMapService = _googleStaticMapService;
                     tile.worldCenterLocation = _gpsLocationService.mapOrigin;
-                    tile.zoomLevel = _gpsLocationService.mapTileZoomLevel;
+                    tile.zoomLevel = _gpsLocationService.ZoomLevel;
                     tile.gpsLocationService = _gpsLocationService;
                     tile.transform.position = CalcTilePosition(location)
                         + new Vector3(i - 1, 0, j - 1) * PLANE_SIZE;
@@ -110,9 +110,9 @@ namespace FoodyGo.Mapping
                 _gpsLocationService.latitude, _gpsLocationService.longitude);
 
             float dx = (float)GoogleMapUtils.LonToUnityX(
-                curLoc.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.mapTileZoomLevel);
+                curLoc.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.ZoomLevel);
             float dz = (float)GoogleMapUtils.LatToUnityY(
-                curLoc.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.mapTileZoomLevel);
+                curLoc.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.ZoomLevel);
 
             Vector2Int targetIndex = CalcTileIndex(curLoc);
             Vector2Int deltaIndex = targetIndex - _currentCenterTileIndex;

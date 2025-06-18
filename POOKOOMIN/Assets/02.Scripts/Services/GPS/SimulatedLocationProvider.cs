@@ -10,6 +10,7 @@ namespace FoodyGo.Services.GPS
     public class SimulatedLocationProvider : MonoBehaviour, ILocationProvider
     {
         public Transform target { get; set; }
+        public int zoomLevel { get; set;}
 
         public MapLocation startLocation { get; set; }
 
@@ -22,7 +23,6 @@ namespace FoodyGo.Services.GPS
         public bool isRunning { get; private set; }
 
         public event Action<double, double, double, float, double> onLocationUpdated;
-
 
         private double _metersPerDegreeLatitude = 111320; // 위도 1도당 약 111.32km
         private float _updateLocationInterval = 0.1f; // 갱신 간격
@@ -75,8 +75,8 @@ namespace FoodyGo.Services.GPS
 
             Vector3 currentPosition = target.position;
 
-            latitude = GoogleMapUtils.UnityYToLat(currentPosition.z, startLocation.latitude, 18);
-            longitude = GoogleMapUtils.UnityXToLon(currentPosition.x, startLocation.longitude, 18);
+            latitude = GoogleMapUtils.UnityYToLat(currentPosition.z, startLocation.latitude, zoomLevel);
+            longitude = GoogleMapUtils.UnityXToLon(currentPosition.x, startLocation.longitude, zoomLevel);
 
             onLocationUpdated?.Invoke(
                 latitude,
