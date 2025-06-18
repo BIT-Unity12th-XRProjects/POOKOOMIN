@@ -18,5 +18,10 @@ EditorBuildSettings:
     path: Assets/01.Scenes/Catch.unity
     guid: 77e1a1d3e70aac143a0c0748bbd1ab66
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 64b8dadae2fa9ea4f8f4f570d07e6564, type: 2}
+    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: caf6d59c1f8a3b14db80fdd711471e9f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: b9cddaf5eff08a1468cc2419af7cfc30, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 29818987f0462934b89cf7aadef19d3b, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 2c6167d155db5b44292eeaa54d7d2da8, type: 2}
   m_UseUCBPForAssetBundles: 0
