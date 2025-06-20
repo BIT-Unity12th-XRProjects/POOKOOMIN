@@ -7,9 +7,18 @@ using FoodyGo.Singletons;
 using FoodyGo.Controllers;
 using FoodyGo.UI;
 using Pookoomin.UI;
+using System.Collections.Generic;
 
 namespace FoodyGo.Managers
 {
+    public enum GameState
+    {
+        None,
+        Lobby,
+        Walk,
+        ARCamera
+    }
+
     public class GameManager : Singleton<GameManager>
     {
         [Header("Game Scenes")]
@@ -29,16 +38,24 @@ namespace FoodyGo.Managers
         public UserWorkData userWorkData;
         #endregion
 
+        private Stack<GameState> stateStack;
+        private GameState currentState;
+
+        public Action<GameState> onChangeGameState;
+
         // Use this for initialization
         IEnumerator Start()
         {
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+            stateStack = new Stack<GameState>();
 
             yield return SceneManager.LoadSceneAsync(SplashSceneName, LoadSceneMode.Additive);
             yield return SceneManager.LoadSceneAsync(MapSceneName, LoadSceneMode.Additive);
             yield return SceneManager.LoadSceneAsync(CatchSceneName, LoadSceneMode.Additive);
             ActiveAdditiveScene(MapSceneName);
             yield return SceneManager.UnloadSceneAsync(SplashSceneName);
+            stateStack.Push(GameState.Lobby);
+            currentState = GameState.Lobby;
         }
 
         //run when a new scene is loaded
@@ -56,6 +73,7 @@ namespace FoodyGo.Managers
 
                 // Pookoomin.UI.UIManager.instance.OpenUI<UICameraButtonsController, UICameraButtonsView, object>(null);
                 Pookoomin.UI.UIManager.instance.OpenUI<UIUserWorkDataController, UIUserWorkDataView, UserWorkData>(userWorkData);
+                Pookoomin.UI.UIManager.instance.OpenUI<UIInGameButtonsController, UIInGamebuttonsView, object>(null);
             }
             else if (scene.name == CatchSceneName)
             {
@@ -86,10 +104,26 @@ namespace FoodyGo.Managers
         }
 
 
-        // Update is called once per frame
-        void Update()
+        public void ChangeGameState(GameState state)
         {
+            if (currentState == state) 
+            {
+                return;
+            } 
 
+            stateStack.Push(state);
+            currentState = state;
+            onChangeGameState.Invoke(currentState);
+        }
+
+        public void ChangeBackState()
+        {
+            if(stateStack.Count > 1)
+            {
+                stateStack.Pop();
+                currentState = stateStack.Peek();
+                onChangeGameState.Invoke(currentState);
+            }
         }
 
         /// <summary>

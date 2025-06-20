@@ -1,4 +1,5 @@
-﻿using FoodyGo.Services.GoogleMaps;
+﻿using FoodyGo.Managers;
+using FoodyGo.Services.GoogleMaps;
 using FoodyGo.Services.GPS;
 using System;
 using System.Collections;
@@ -35,6 +36,7 @@ namespace FoodyGo.Mapping
             _mapOrigin = _gpsLocationService.mapCenter;
             InitializeTiles();
             isInitialized = true;
+            GameManager.instance.onChangeGameState += OnChangeGameState;
         }
 
         /// <summary>
@@ -195,8 +197,27 @@ namespace FoodyGo.Mapping
             }
         }
 
-#if UNITY_EDITOR
-        //@TK : Test 용
+        public void OnChangeGameState(GameState state)
+        {
+            bool active = true;
+            if(state == GameState.ARCamera)
+            {
+                active = false;
+            }
+            else if(state == GameState.Lobby)
+            {
+                active = true;
+            }
+
+            for(int i = 0; i < GRID_SIZE; i++)
+            {
+                for(int j = 0; j < GRID_SIZE; j++)
+                {
+                    _mapTiles[i, j].SetMeshVisible(active);
+                }
+            }
+        }
+
         void OnGUI()
         {
             // Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
@@ -205,7 +226,5 @@ namespace FoodyGo.Mapping
                 CreateTiles(new MapLocation(_gpsLocationService.latitude, _gpsLocationService.longitude));
             }
         }
-#endif
-
     }
 }
