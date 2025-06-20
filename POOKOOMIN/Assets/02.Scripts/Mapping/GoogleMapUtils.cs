@@ -206,5 +206,48 @@ namespace FoodyGo.Mapping
         //     (float)myMarker.pixelCoords.x / (float)renderer.material.mainTexture.width,
         //     1f - (float)myMarker.pixelCoords.y / (float)renderer.material.mainTexture.height
         // );
+
+
+        // 지구 반지름 (미터)
+        private const double EarthRadius = 6371000;
+
+        /// <summary>
+        /// Haversine 공식으로 두 위경도 사이 거리(m) 계산 (피타고라스에 원호를 보정)
+        /// </summary>
+        public static double GetDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            double dLat = DegreeToRadian(lat2 - lat1);
+            double dLon = DegreeToRadian(lon2 - lon1);
+
+            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                       Math.Cos(DegreeToRadian(lat1)) * Math.Cos(DegreeToRadian(lat2)) *
+                       Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return EarthRadius * c;
+        }
+
+        /// <summary>
+        /// double용 DegreeToRadian
+        /// </summary>
+        /// <param name="degree"></param>
+        /// <returns></returns>
+        private static double DegreeToRadian(double degree)
+        {
+            return degree * Math.PI / 180.0;
+        }
+
+        /// <summary>
+        /// 하버사인 공식으로 거리에 따라 timeStamp 차이 만큼 속도 구하기
+        /// </summary>
+        public static double GetSpeed(
+            double prevLat, double prevLon, double prevTime,
+            double currLat, double currLon, double currTime)
+        {
+            double distance = GetDistance(prevLat, prevLon, currLat, currLon);
+            double timeDiff = currTime - prevTime; // 초 단위
+            if (timeDiff <= 0) return 0;
+            return distance / timeDiff;
+        }
     }
 }

@@ -195,7 +195,8 @@ namespace FoodyGo.Mapping
             }
         }
 
-
+#if UNITY_EDITOR
+        //@TK : Test 용
         void OnGUI()
         {
             // Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
@@ -204,5 +205,7 @@ namespace FoodyGo.Mapping
                 CreateTiles(new MapLocation(_gpsLocationService.latitude, _gpsLocationService.longitude));
             }
         }
+#endif
+
     }
 }
