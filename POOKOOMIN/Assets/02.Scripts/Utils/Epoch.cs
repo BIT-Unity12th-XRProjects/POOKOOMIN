@@ -4,6 +4,9 @@ namespace FoodyGo.Utils
 {
     public static class Epoch
     {
+        /// <summary>
+        /// Unix Epoch : Total seconds라서 초 단위
+        /// </summary>
         public static double Now
         {
             get

@@ -19,7 +19,7 @@ namespace FoodyGo.Controllers
         [SerializeField] LayerMask _battleMask;
 
         /// <summary>
-        /// ¿òÁ÷ÀÓ ÀÌº¥Æ® : ÆÄ¶ó¹ÌÅÍ´Â ¿òÁ÷ÀÓ °ª
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® : ï¿½Ä¶ï¿½ï¿½ï¿½Í´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
         /// </summary>
         public event Action<float> OnMovement; 
 
@@ -91,32 +91,79 @@ namespace FoodyGo.Controllers
             }
         }
 #elif UNITY_ANDROID
-                
-        private Vector3 _prevPosition;
-
+        
         [Inject] GPSLocationService _gpsLocationService;
+
+        //ï¿½Ó·ï¿½ Ã¼Å©
+        private double _prevLatitude;
+        private double _prevLongitude;
+        private double _prevTime;
+        private const double SpeedUpdateInterval = 1.0; // 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ Ã¼Å©
+        private double _currentSpeed; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½(m/s)
+        private float _animSpeed;     // ï¿½Ö´Ï¸ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½Þµï¿½ ï¿½Óµï¿½
+
+        private void OnEnable()
+        {
+            _prevLatitude = _gpsLocationService.latitude;
+            _prevLongitude = _gpsLocationService.longitude;
+            _prevTime = _gpsLocationService.timeStamp;
+
+            _currentSpeed = 0;
+            _animSpeed = 0;
+        }
 
         private void FixedUpdate()
         {
-            float x = GoogleMapUtils.LonToUnityX(_gpsLocationService.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.ZoomLevel);
+            Movement();
+        }
 
+        private void Movement()
+        {
+            float x = GoogleMapUtils.LonToUnityX(_gpsLocationService.longitude, _gpsLocationService.mapOrigin.longitude, _gpsLocationService.ZoomLevel);
             float z = GoogleMapUtils.LatToUnityY(_gpsLocationService.latitude, _gpsLocationService.mapOrigin.latitude, _gpsLocationService.ZoomLevel);
 
             transform.position = new Vector3(x, 0f, z);
 
-            _prevPosition = transform.position;
-            Vector3 newPosition = new Vector3(x, 0f, z);
+            double currTime = _gpsLocationService.timeStamp;
+            double timeDiff = currTime - _prevTime;
 
-            float moveSpeed = (newPosition - _prevPosition).magnitude / Time.fixedDeltaTime;
-            
-            //@TK(25.06.17) Check ºôµå¿¡¼­ ¾Ö´Ï¸ÞÀÌ¼Ç Àß ³ª¿À´ÂÁö
-            OnMovement?.Invoke(moveSpeed);
+            if (timeDiff >= SpeedUpdateInterval)
+            {
+                _currentSpeed = GoogleMapUtils.GetSpeed(
+                _prevLatitude, _prevLongitude, _prevTime,
+                _gpsLocationService.latitude, _gpsLocationService.longitude, currTime
+                );
 
-            transform.position = newPosition;
-            _prevPosition = newPosition;
+                _animSpeed = (float)((_currentSpeed < 0.2) ? 0.0 : _currentSpeed);
 
-            //TODO : ¾î¶»°Ô LookAt ÇÒ °ÍÀÎ°¡
+                OnMovement?.Invoke(_animSpeed);
+
+                _prevLatitude = _gpsLocationService.latitude;
+                _prevLongitude = _gpsLocationService.longitude;
+                _prevTime = currTime;
+            }
         }
+
+        //void OnGUI()
+        //{
+        //    string text = $"Speed: {_currentSpeed:F2} m/s\n
+        //    AnimSpeed: {_animSpeed:F2}\n
+        //    Latitude: {_prevLatitude:F6}\n
+        //    Longitude: {_prevLongitude:F6}";
+        //    GUIStyle style = new GUIStyle(GUI.skin.label)
+        //    {
+        //        fontSize = 32,
+        //        alignment = TextAnchor.UpperCenter,
+        //        normal = { textColor = Color.white }
+        //    };
+
+        //    float width = 600;
+        //    float height = 160;
+        //    float x = (Screen.width - width) / 2f;
+        //    float y = 10;
+
+        //    GUI.Label(new Rect(x, y, width, height), text, style);
+        //}
 #endif
 
         private void OnTriggerEnter(Collider other)
