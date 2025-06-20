@@ -1,3 +1,4 @@
+using FoodyGo.Managers;
 using UnityEngine;
 
 namespace Pookoomin.UI
@@ -19,10 +20,8 @@ namespace Pookoomin.UI
 
         public void OnClickBackButton()
         {
-            //TODO : 이전 상태로 돌아가기
-            //일단은 ar카메라모드에서 인게임모드로 돌아가는걸로.
-            //추후에 이전상태값을 저장해두고 해당 모드에 맞게 오브젝트들 활성화/비활성화 해야 할 것 같음
-           
+            //TODO : 이전 상태(모드)로 돌아가기
+            GameManager.instance.ChangeBackState();
         }
 
         public void OnClickSortButton()
@@ -33,13 +32,9 @@ namespace Pookoomin.UI
         public void OnClickARCameraButton()
         {
             //TODO : AR카메라로 전환
-            //상태를 AR카메라 모드로 바꾸고
-            //상태가 전환되면 아래 활동을 수행 해야할것같음
-            //일단 필요한 것 : AR카메라모드에 필요한 오브젝트들(활성화), 기본인게임모드에 필요한 오브젝트들(비활성화)
-            GameObject ar = GameObject.Find("AR_Objects").transform.GetChild(2).gameObject;
-
-            ar.GetComponent<Camera>().enabled = true;
-            Camera.main.enabled = false;
+            //현재모드를 AR카메라 모드로 바꾸기
+            //현재 GameManager의 namespace가 FoodyGo로 되어있음 추후 수정 필요
+            GameManager.instance.ChangeGameState(GameState.ARCamera);
         }
     }
 }

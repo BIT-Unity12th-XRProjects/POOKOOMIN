@@ -28,6 +28,9 @@ namespace Pookoomin.Pedometer
                 return;
             }
 
+            if (Accelerometer.current == null)
+                return;
+
             if (!Accelerometer.current.enabled)
             {
                 InputSystem.EnableDevice(Accelerometer.current);

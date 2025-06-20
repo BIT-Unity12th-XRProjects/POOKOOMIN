@@ -1,27 +1,44 @@
+using FoodyGo.Managers;
 using FoodyGo.Mapping;
-using FoodyGo.Services.GPS;
 using FoodyGo.UI;
 using FoodyGo.Utils.DI;
+using FoodyGo.Services;
 using System;
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Windows;
+using FoodyGo.Services.GPS;
 
-namespace FoodyGo.Controllers
+namespace Pookoomin.Controller
 {
-    /// <summary>
-    /// PlayerController
-    /// </summary>
-    public class PC : MonoBehaviour
+    public class PlayerController : MonoBehaviour
     {
+
         [SerializeField] LayerMask _battleMask;
+        [SerializeField] PlayerRenderer _renderer;
 
         /// <summary>
-        /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® : ï¿½Ä¶ï¿½ï¿½ï¿½Í´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+        /// ¿òÁ÷ÀÓ ÀÌº¥Æ® : ÆÄ¶ó¹ÌÅÍ´Â ¿òÁ÷ÀÓ °ª
         /// </summary>
-        public event Action<float> OnMovement; 
+        public event Action<float> OnMovement;
+
+        public void OnChangeGameState(GameState state)
+        {
+            if(state == GameState.ARCamera)
+            {
+                _renderer.SetMeshVisible(false);
+            }
+            else if(state == GameState.Lobby)
+            {
+                _renderer.SetMeshVisible(true);
+            }
+        }
+
+        private void Awake()
+        {
+            GameManager.instance.onChangeGameState += OnChangeGameState;
+        }
 
 #if UNITY_EDITOR
         public Vector3 velocity;
@@ -89,18 +106,19 @@ namespace FoodyGo.Controllers
             {
                 velocity = Vector3.zero;
             }
+            
         }
 #elif UNITY_ANDROID
         
         [Inject] GPSLocationService _gpsLocationService;
 
-        //ï¿½Ó·ï¿½ Ã¼Å©
+        //¼Ó·Â °è»ê
         private double _prevLatitude;
         private double _prevLongitude;
         private double _prevTime;
-        private const double SpeedUpdateInterval = 1.0; // 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ Ã¼Å©
-        private double _currentSpeed; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½(m/s)
-        private float _animSpeed;     // ï¿½Ö´Ï¸ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½Þµï¿½ ï¿½Óµï¿½
+        private const double SpeedUpdateInterval = 1.0; // 1ÃÊ¸¶´Ù °»½Å
+        private double _currentSpeed; //ÇöÀç ½ºÇÇµå
+        private float _animSpeed;     //¾Ö´Ï¸ÞÀÌ¼Ç ÆÄ¶ó¹ÌÅÍ
 
         private void OnEnable()
         {
@@ -176,3 +194,4 @@ namespace FoodyGo.Controllers
         }
     }
 }
+

@@ -1,4 +1,5 @@
-﻿using FoodyGo.Services.GoogleMaps;
+﻿using FoodyGo.Managers;
+using FoodyGo.Services.GoogleMaps;
 using FoodyGo.Services.GPS;
 using UnityEngine;
 
@@ -51,6 +52,11 @@ namespace FoodyGo.Mapping
                                            zoomLevel,
                                            new Vector2(size, size),
                                            OnMapLoaded);
+        }
+
+        public void SetMeshVisible(bool active)
+        {
+            _renderer.enabled = active;
         }
 
         private void OnMapLoaded(Texture2D texture)
