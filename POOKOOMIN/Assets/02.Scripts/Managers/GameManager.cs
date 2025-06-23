@@ -46,6 +46,8 @@ namespace FoodyGo.Managers
         // Use this for initialization
         IEnumerator Start()
         {
+            currentState = GameState.None;
+
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
             stateStack = new Stack<GameState>();
 
@@ -55,7 +57,7 @@ namespace FoodyGo.Managers
             ActiveAdditiveScene(MapSceneName);
             yield return SceneManager.UnloadSceneAsync(SplashSceneName);
             stateStack.Push(GameState.Lobby);
-            currentState = GameState.Lobby;
+            ChangeGameState(GameState.Lobby);
         }
 
         //run when a new scene is loaded
@@ -71,9 +73,6 @@ namespace FoodyGo.Managers
                 userWorkData.coin.Value = 0;
                 #endregion
 
-                // Pookoomin.UI.UIManager.instance.OpenUI<UICameraButtonsController, UICameraButtonsView, object>(null);
-                Pookoomin.UI.UIManager.instance.OpenUI<UIUserWorkDataController, UIUserWorkDataView, UserWorkData>(userWorkData);
-                Pookoomin.UI.UIManager.instance.OpenUI<UIInGameButtonsController, UIInGamebuttonsView, object>(null);
             }
             else if (scene.name == CatchSceneName)
             {
@@ -110,6 +109,21 @@ namespace FoodyGo.Managers
             {
                 return;
             } 
+
+            //@TK : UI작업 분리
+            if(state == GameState.Lobby)
+            {
+                Pookoomin.UI.UIManager.instance.OpenUI<UIUserWorkDataController, UIUserWorkDataView, UserWorkData>(userWorkData);
+                Pookoomin.UI.UIManager.instance.OpenUI<UIInGameButtonsController, UIInGamebuttonsView, object>(null);
+            }
+            else if(state == GameState.ARCamera)
+            {
+                if (Pookoomin.UI.UIManager.instance.IsOpenedUI<UIUserWorkDataView>())
+                {
+                    var workDataUI = Pookoomin.UI.UIManager.instance.GetOpenedUI<UIUserWorkDataView>();
+                    Pookoomin.UI.UIManager.instance.CloseUI(workDataUI);
+                }
+            }
 
             stateStack.Push(state);
             currentState = state;
