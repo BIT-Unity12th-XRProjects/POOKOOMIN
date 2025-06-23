@@ -1,3 +1,4 @@
+using FoodyGo.Managers;
 using FoodyGo.Singletons;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace Pookoomin.UI
 
         private Dictionary<Type, UIView> OpenUIPool = new Dictionary<Type, UIView>();
         private Dictionary<Type, UIView> CloseUIPool = new Dictionary<Type, UIView>();
+
 
         private UIView GetUI<TView>(out bool isAlreadyOpen) where TView : UIView
         {
@@ -112,6 +114,12 @@ namespace Pookoomin.UI
                 ui = OpenUIPool[uiType].GetComponent<UIView>();
             }
             return (T)ui;
+        }
+
+        public bool IsOpenedUI<T>()
+        {
+            Type uiType = typeof(T);
+            return OpenUIPool.ContainsKey(uiType);
         }
     }
 }

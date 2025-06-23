@@ -506,6 +506,7 @@ MonoBehaviour:
   reloadButton: {fileID: 5691241446518137495}
   cameraButton: {fileID: 2147289842752773083}
   albumButton: {fileID: 8911518580595046815}
+  albumImage: {fileID: 2006477603652674528}
 --- !u!223 &4937936185075240049
 Canvas:
   m_ObjectHideFlags: 0
