@@ -5,7 +5,7 @@ using System.Linq;
 public static class PictureUtil
 {
     /// <summary>
-    /// 모바일 사진 저장 유틸 메소드
+    /// Save the mobile pictures method
     /// </summary>
     public static void SaveImageToGallery(string filePath)
     {
@@ -27,7 +27,7 @@ public static class PictureUtil
     }
 
     /// <summary>
-    /// 갤러리에서 첫번째 사진, 썸네일 형태로 로드
+    /// get first picture in gallery (mobile)
     /// </summary>
     public static Texture2D LoadThumbnailToGallary()
     {
@@ -43,7 +43,7 @@ public static class PictureUtil
             string base64 = galleryClass.CallStatic<string>("getFirstImage", currentActivity);
             Debug.Log($"@@@base64 is null : {base64 == null}");
             Texture2D tex = UIUtil.Base64ToTexture2D(base64);
-            Debug.Log($"@@@tex is null : {tex == null}");
+            Debug.Log($"@@@tex is null : {base64 == null}");
             return tex;
         }
         catch (System.Exception e)
@@ -55,7 +55,7 @@ public static class PictureUtil
     }
 
     /// <summary>
-    /// 갤러리 앱 열기
+    /// open the gallery app
     /// </summary>
     public static void OpenGallery()
     {

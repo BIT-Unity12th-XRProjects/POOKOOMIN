@@ -35,7 +35,7 @@ namespace Pookoomin.UI
 
         public void OnClickReloadButton()
         {
-            //TODO : 오브젝트 정렬
+            //TODO : object(pet) sort
         }
 
         public void OnClickCameraButton()
