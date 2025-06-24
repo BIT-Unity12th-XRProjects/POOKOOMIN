@@ -1,0 +1,9 @@
+{
+  "rewards": [
+    { "stepThreshold": 3000, "rewardItemId": "hat_blue" },
+    { "stepThreshold": 3000, "rewardItemId": "hat_pink" },
+    { "stepThreshold": 3000, "rewardItemId": "hat_green" },
+    { "stepThreshold": 3000, "rewardItemId": "hat_white" },
+    { "stepThreshold": 3000, "rewardItemId": "backpack" }
+  ]
+}

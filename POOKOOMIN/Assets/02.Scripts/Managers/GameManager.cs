@@ -36,12 +36,19 @@ namespace FoodyGo.Managers
         #region Test
         //@tk : user Data 임시로 넣음. 관리
         public UserWorkData userWorkData;
+        public DataLoader<UserWorkData, UserWorkDataRaw> userWorkDataLoader;
         #endregion
 
         private Stack<GameState> stateStack;
         private GameState currentState;
 
         public Action<GameState> onChangeGameState;
+
+        private void Awake()
+        {
+            userWorkDataLoader = new DataLoader<UserWorkData, UserWorkDataRaw>(typeof(UserWorkData).Name + ".json");
+            userWorkData = userWorkDataLoader.Load();
+        }
 
         // Use this for initialization
         IEnumerator Start()
@@ -66,13 +73,6 @@ namespace FoodyGo.Managers
             if (scene.name == MapSceneName)
             {
                 MapScene = scene;
-
-                #region Test
-                userWorkData = new UserWorkData();
-                userWorkData.stepCount.Value = 0;
-                userWorkData.coin.Value = 0;
-                #endregion
-
             }
             else if (scene.name == CatchSceneName)
             {
