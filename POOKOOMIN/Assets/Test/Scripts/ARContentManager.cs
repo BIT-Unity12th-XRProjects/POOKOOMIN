@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.XR.ARFoundation;
 
+//TODO : ground(+NAVMESH) 생성 + hit -> 넘겨주는 역할
+//TODO : Pet관리 클래스
+//TODO : ARPet 클래스 : NavMeshAgent 이동하고 애니메이션 
 public class ARContentManager : MonoBehaviour
 {
     private ARRaycastManager arRaycastManager;

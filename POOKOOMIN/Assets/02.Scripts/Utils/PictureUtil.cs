@@ -35,48 +35,45 @@ public static class PictureUtil
         Debug.Log("에디터/비안드로이드 환경에서는 갤러리 접근이 지원되지 않습니다.");
         return null;
 #elif UNITY_ANDROID
-        // 대표적인 갤러리 경로
-        string galleryDir = "/storage/emulated/0/DCIM/Camera";
-        string FilePath = string.Empty;
-        if (Directory.Exists(galleryDir))
+        try
         {
-            Debug.Log("@@@@@@@@@@@@@@@갤러리 있음");
-            // jpg, png 등 이미지 파일만 필터링
-            string[] files = Directory.GetFiles(galleryDir, "*.*")
-                .Where(f => f.EndsWith(".jpg", System.StringComparison.OrdinalIgnoreCase) ||
-                            f.EndsWith(".jpeg", System.StringComparison.OrdinalIgnoreCase) ||
-                            f.EndsWith(".png", System.StringComparison.OrdinalIgnoreCase))
-                .OrderBy(f => f)
-                .ToArray();
-
-            for (int i = 0; i < files.Length; i++)
-            {
-                Debug.Log(files[i]);
-            }
-
-            if (files.Length > 0)
-            {
-                FilePath = files[0];
-
-                // 썸네일 생성 (원본을 바로 로드하면 메모리 이슈, 썸네일만 생성)
-                byte[] imgBytes = File.ReadAllBytes(FilePath);
-                Texture2D tex = new Texture2D(2, 2);
-                if (tex.LoadImage(imgBytes))
-                {
-                    Debug.Log($"texture : {tex}");
-                    return tex;
-                }
-
-                Debug.Log($"텍스처 못가져옴");
-
-            }
+            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            AndroidJavaClass galleryClass = new AndroidJavaClass("com.example.usergallery.gallery");
+            string base64 = galleryClass.CallStatic<string>("getFirstImage", currentActivity);
+            Debug.Log($"@@@base64 is null : {base64 == null}");
+            Texture2D tex = UIUtil.Base64ToTexture2D(base64);
+            Debug.Log($"@@@tex is null : {tex == null}");
+            return tex;
         }
-        else
+        catch (System.Exception e)
         {
-            Debug.LogWarning("갤러리 폴더를 찾을 수 없습니다.");
+            Debug.LogError("Error calling Java: " + e.Message);
         }
-
         return null;
+#endif
+    }
+
+    /// <summary>
+    /// 갤러리 앱 열기
+    /// </summary>
+    public static void OpenGallery()
+    {
+#if UNITY_EDITOR
+        Debug.Log("에디터/비안드로이드 환경에서는 갤러리 접근이 지원되지 않습니다.");
+        return;
+#elif UNITY_ANDROID
+        try
+        {
+            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            AndroidJavaClass galleryClass = new AndroidJavaClass("com.example.usergallery.gallery");
+            galleryClass.CallStatic("openGallery", currentActivity);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Error calling Java: " + e.Message);
+        }
 #endif
     }
 }

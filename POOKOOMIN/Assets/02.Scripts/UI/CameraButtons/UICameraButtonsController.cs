@@ -28,9 +28,9 @@ namespace Pookoomin.UI
         {
             Debug.Log($"Model is null? : {model == null}");
             Debug.Log($"ThumnailImage is null? : {model?.ThumbnailImage == null}");
-            
-            //model.onChangedThumbnail += view.SetAlbumImage;
-            //model.ThumbnailImage = PictureUtil.LoadThumbnailToGallary();
+            Debug.Log($"View is null? : {view == null}");
+            model.onChangedThumbnail += view.SetAlbumImage;
+            model.ThumbnailImage = PictureUtil.LoadThumbnailToGallary();
         }
 
         public void OnClickReloadButton()
@@ -42,15 +42,15 @@ namespace Pookoomin.UI
         {
             arCamera?.CaptureImage();
 
-            //arCamera?.CaptureImage((texture) =>
-            //{
-            //    model.ThumbnailImage = texture;
-            //});
+            arCamera?.CaptureImage((texture) =>
+            {
+                model.ThumbnailImage = texture;
+            });
         }
 
         public void OnClickAlbumButton()
         {
-            //TODO : ¾Ù¹ü Á¢±Ù
+            PictureUtil.OpenGallery();
         }
     }
 }
