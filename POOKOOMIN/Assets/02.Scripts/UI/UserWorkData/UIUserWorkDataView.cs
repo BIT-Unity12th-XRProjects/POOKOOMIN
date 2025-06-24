@@ -7,14 +7,17 @@ namespace Pookoomin.UI
     public class UIUserWorkDataView : UIView
     {
         [SerializeField] private Image stepIcon;
-        [SerializeField] private Image coinIcon;
 
         [SerializeField] private TextMeshProUGUI stepHeaderText;
         [SerializeField] private TextMeshProUGUI stepValueText;
         [SerializeField] private TextMeshProUGUI currentCoinHeaderText;
-        [SerializeField] private TextMeshProUGUI nextCoinHeaderText;
         [SerializeField] private TextMeshProUGUI currentCoinValueText;
-        [SerializeField] private TextMeshProUGUI nextCoinValueText;
+
+        public void InitUIUserWorkData(UserWorkData userData)
+        {
+            stepValueText.text = userData.stepCount.Value.ToString();
+            currentCoinValueText.text = userData.coin.Value.ToString();
+        }
 
         public void OnStepUpdated(int currentStep)
         {

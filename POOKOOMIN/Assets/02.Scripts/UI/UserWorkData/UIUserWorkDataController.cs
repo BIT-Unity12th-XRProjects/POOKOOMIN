@@ -11,6 +11,8 @@ namespace Pookoomin.UI
 
         public override void BindModelToView()
         {
+            view.InitUIUserWorkData(model);
+
             model.stepCount.PropertyChanged += (sender, value) => {
                 view.OnStepUpdated(value);
             };
