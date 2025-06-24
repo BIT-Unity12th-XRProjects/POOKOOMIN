@@ -1,7 +1,6 @@
 using FoodyGo.Managers;
 using Pookoomin.UI;
 using System;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR.ARFoundation;
@@ -29,8 +28,6 @@ public class ARCameraController : MonoBehaviour
     {
         if (currentState == GameState.ARCamera)
         {
-
-
             arSession.SetActive(true);
             xrOrigin.SetActive(true);
 

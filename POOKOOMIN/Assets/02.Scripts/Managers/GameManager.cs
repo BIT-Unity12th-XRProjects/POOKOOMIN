@@ -135,7 +135,7 @@ namespace FoodyGo.Managers
             if(stateStack.Count > 1)
             {
                 stateStack.Pop();
-                currentState = stateStack.Peek();
+                ChangeGameState(stateStack.Peek());
                 onChangeGameState.Invoke(currentState);
             }
         }

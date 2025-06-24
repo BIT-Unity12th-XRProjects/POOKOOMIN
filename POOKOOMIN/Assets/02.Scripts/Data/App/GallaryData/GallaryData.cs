@@ -13,7 +13,7 @@ public class GallaryData
         get { return thumbnailImage; }
         set
         {
-            if (thumbnailImage.Equals(value))
+            if (thumbnailImage != null && thumbnailImage.Equals(value))
                 return;
 
             thumbnailImage = value;
