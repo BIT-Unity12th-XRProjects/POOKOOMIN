@@ -9,6 +9,11 @@ public class GoogleFitService : MonoBehaviour
 
     private int testValue = 0;
 
+    private void Start()
+    {
+        GoogleFitUtil.GetTodayStepCount();
+    }
+
     /// <summary>
     /// Java -> Unity로 호출 됨 (GoogleFit Sensor 변경될 때마다)
     /// </summary>

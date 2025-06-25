@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.net.Uri;
 
+import com.google.android.gms.fitness.data.*;
 import com.google.android.gms.auth.api.signin.*;
 import com.google.android.gms.fitness.*;
 
@@ -21,14 +22,15 @@ public class googleFitPermissionActivity extends Activity {
         //    return;
         //}
 
-        if (!GoogleSignIn.hasPermissions(account, googleFit.FIT_OPTIONS)) {
+        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), googleFit.FIT_OPTIONS)) {
             GoogleSignIn.requestPermissions(
                     this,
                     googleFit.GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
-                    account,
+                    GoogleSignIn.getLastSignedInAccount(this),
                     googleFit.FIT_OPTIONS);
         } else {
-            startSensorAndExit();
+            registOnBackground();
+            finish();
         }
     }
 
@@ -37,17 +39,15 @@ public class googleFitPermissionActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == googleFit.GOOGLE_FIT_PERMISSIONS_REQUEST_CODE && resultCode == RESULT_OK) {
-            startSensorAndExit();
+            registOnBackground();
+            finish();
         } else {
             Log.w(googleFit.TAG, "Google Fit 권한이 거부되었습니다.");
             finish();
         }
     }
 
-    private void startSensorAndExit() {
-        googleFit.subscribeSensor(this);
-        finish();
-    }
+
 
     //구글 핏 없으면 다운로드하게 유도
     private void redirectToPlayStore() {
@@ -64,5 +64,18 @@ public class googleFitPermissionActivity extends Activity {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    //백그라운드에서도 기록 남기
+    public void registOnBackground() {
+        Fitness.getRecordingClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                .subscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // 구독 성공
+                    } else {
+                        // 구독 실패
+                    }
+                });
     }
 }

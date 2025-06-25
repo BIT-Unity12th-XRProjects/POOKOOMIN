@@ -16,9 +16,11 @@ namespace Pookoomin.UI
 
         public override void BindModelToView()
         {
-            model.stepCount.PropertyChanged += (sender, value) => {
-                view.OnStepUpdated(value);
-            };
+            _googleFitService.OnStepCountChanged += view.OnStepUpdated;
+
+            //model.stepCount.PropertyChanged += (sender, value) => {
+            //    view.OnStepUpdated(value);
+            //};
 
             //model.coin.PropertyChanged += (sender, value) => {
             //    view.OnCoinUpdated(value);
