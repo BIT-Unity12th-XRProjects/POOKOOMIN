@@ -39,4 +39,5 @@ dependencies {
     // Google Fit 관련
     implementation("com.google.android.gms:play-services-fitness:21.0.1")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+
 }

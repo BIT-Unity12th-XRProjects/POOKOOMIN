@@ -2,74 +2,68 @@ package com.example.usergooglefit;
 
 import android.app.Activity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.*;
 import com.google.android.gms.fitness.*;
 import com.google.android.gms.fitness.data.*;
-import com.google.android.gms.fitness.request.DataReadRequest;
-import com.google.android.gms.tasks.*;
+import com.google.android.gms.fitness.request.SensorRequest;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class googleFit {
-    private static final String TAG = "GoogleFitPlugin";
-    private static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 9001;
+    public static final String TAG = "GoogleFitPlugin";
+    public static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 9001;
+    public static final FitnessOptions FIT_OPTIONS = FitnessOptions.builder()
+            .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE , FitnessOptions.ACCESS_READ)
+            .build();
 
-    public static void requestPermission(Activity activity) {
-        FitnessOptions fitnessOptions = FitnessOptions.builder()
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .build();
+    //@TK : libs에 unity 두면 중복 되서 빌드 x, 따로 한번 캐싱해야함.
+    private static Class<?> unityPlayer;
+    private static java.lang.reflect.Field currentActivityField;
+    private static java.lang.reflect.Method unitySendMessageMethod;
 
-        GoogleSignInAccount account = GoogleSignIn.getAccountForExtension(activity, fitnessOptions);
+    // 1) 권한이 승인된 직후나, 이미 승인 상태면 여기서 센서 구독을 시작
+    public static void subscribeSensor(Activity activity) {
 
-        if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                    activity,
-                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
-                    account,
-                    fitnessOptions
-            );
-        } else {
-            Log.i(TAG, "Already has permission.");
+        try {
+            initUnityReflection();
+        } catch (Exception e) {
+            Log.e(TAG, "Unity reflection 초기화 실패", e);
+            return;
         }
-    }
 
-    public static void getTodayStepCount(Activity activity) {
-        GoogleSignInAccount account = GoogleSignIn.getAccountForExtension(activity,
-                FitnessOptions.builder()
-                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                        .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                        .build());
+        SensorsClient sensorsClient = Fitness.getSensorsClient(
+                activity,
+                GoogleSignIn.getAccountForExtension(activity, FIT_OPTIONS));
 
-        long end = System.currentTimeMillis();
-        long start = end - TimeUnit.DAYS.toMillis(1);
-
-        DataReadRequest readRequest = new DataReadRequest.Builder()
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                .bucketByTime(1, TimeUnit.DAYS)
-                .setTimeRange(start, end, TimeUnit.MILLISECONDS)
+        SensorRequest request = new SensorRequest.Builder()
+                .setDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                .setSamplingRate(5, TimeUnit.SECONDS)
                 .build();
 
-        Fitness.getHistoryClient(activity, account)
-                .readData(readRequest)
-                .addOnSuccessListener(response -> {
-                    int totalSteps = 0;
-                    for (Bucket bucket : response.getBuckets()) {
-                        for (DataSet dataSet : bucket.getDataSets()) {
-                            for (DataPoint dp : dataSet.getDataPoints()) {
-                                for (Field field : dp.getDataType().getFields()) {
-                                    totalSteps += dp.getValue(field).asInt();
-                                }
-                            }
+        sensorsClient.add(
+                request,
+                dataPoint -> {
+                    for (Field field : dataPoint.getDataType().getFields()) {
+                        int stepCount = dataPoint.getValue(field).asInt();
+                        // Unity로 전달
+                        try {
+                            Object currentActivity = currentActivityField.get(null);
+                            unitySendMessageMethod.invoke(null, "GoogleFitService", "onStepCountChanged", String.valueOf(stepCount));
+                        } catch (Exception e) {
+                            Log.e(TAG, "Unity로 메시지 전달 실패", e);
                         }
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Failed to read steps", e);
-                    Toast.makeText(activity, "Error reading steps", Toast.LENGTH_SHORT).show();
-                });
+                }
+        ).addOnFailureListener(e -> Log.e(TAG, "센서 구독 실패", e));
+    }
+
+    // 클래스 초기화 메서드 (한번만 호출)
+    private static void initUnityReflection() throws Exception {
+        if (unityPlayer == null) {
+            unityPlayer = Class.forName("com.unity3d.player.UnityPlayer");
+            currentActivityField = unityPlayer.getField("currentActivity");
+            unitySendMessageMethod = unityPlayer.getMethod("UnitySendMessage", String.class, String.class, String.class);
+        }
     }
 }

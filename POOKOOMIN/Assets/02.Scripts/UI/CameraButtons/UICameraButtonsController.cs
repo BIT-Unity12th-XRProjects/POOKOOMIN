@@ -26,9 +26,6 @@ namespace Pookoomin.UI
 
         public override void BindModelToView()
         {
-            Debug.Log($"Model is null? : {model == null}");
-            Debug.Log($"ThumnailImage is null? : {model?.ThumbnailImage == null}");
-            Debug.Log($"View is null? : {view == null}");
             model.onChangedThumbnail += view.SetAlbumImage;
             model.ThumbnailImage = PictureUtil.LoadThumbnailToGallary();
         }

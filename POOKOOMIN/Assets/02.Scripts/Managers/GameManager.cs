@@ -53,6 +53,7 @@ namespace FoodyGo.Managers
         // Use this for initialization
         IEnumerator Start()
         {
+
             currentState = GameState.None;
 
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
@@ -60,6 +61,7 @@ namespace FoodyGo.Managers
 
             yield return SceneManager.LoadSceneAsync(SplashSceneName, LoadSceneMode.Additive);
             yield return SceneManager.LoadSceneAsync(MapSceneName, LoadSceneMode.Additive);
+            GoogleFitUtil.RequestGoogleFitOAuth();
             yield return SceneManager.LoadSceneAsync(CatchSceneName, LoadSceneMode.Additive);
             ActiveAdditiveScene(MapSceneName);
             yield return SceneManager.UnloadSceneAsync(SplashSceneName);
