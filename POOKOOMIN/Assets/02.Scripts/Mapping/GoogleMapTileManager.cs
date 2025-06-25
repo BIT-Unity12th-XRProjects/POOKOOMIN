@@ -217,14 +217,5 @@ namespace FoodyGo.Mapping
                 }
             }
         }
-
-        void OnGUI()
-        {
-            // Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
-            if (GUI.Button(new Rect(20, 40, 80, 20), "Level 1"))
-            {
-                CreateTiles(new MapLocation(_gpsLocationService.latitude, _gpsLocationService.longitude));
-            }
-        }
     }
 }

@@ -23,7 +23,6 @@ public static class PictureUtil
             activity.Call("sendBroadcast", mediaScanIntent);
         }
 #endif
-
     }
 
     /// <summary>
