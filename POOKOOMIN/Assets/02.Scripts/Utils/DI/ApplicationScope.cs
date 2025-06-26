@@ -28,7 +28,7 @@ namespace FoodyGo.Utils.DI
 
                 foreach (var monoBehaviour in monobehaviours)
                 {
-                    Inject(monoBehaviour, monoBehaviour.gameObject.name);
+                    Inject(monoBehaviour);
                 }
             }
         }
