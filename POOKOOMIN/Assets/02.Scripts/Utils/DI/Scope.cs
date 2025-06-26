@@ -24,7 +24,7 @@ namespace FoodyGo.Utils.DI
         {
             foreach (var monoBehaviour in _monobehaviours)
             {
-                container.RegisterMonobehaviour(monoBehaviour);
+                container.RegisterMonobehaviour(monoBehaviour, monoBehaviour.gameObject.name);
             }
         }
 
@@ -34,7 +34,7 @@ namespace FoodyGo.Utils.DI
 
             foreach (var monoBehaviour in monobehaviours)
             {
-                Inject(monoBehaviour);
+                Inject(monoBehaviour, monoBehaviour.gameObject.name);
             }
         }
 
@@ -42,7 +42,7 @@ namespace FoodyGo.Utils.DI
         /// 의존성을 주입함
         /// </summary>
         /// <param name="target"> 주입할 대상</param>
-        protected virtual void Inject(object target)
+        protected virtual void Inject(object target, string key = null)
         {
             Type type = target.GetType();
 
@@ -50,12 +50,17 @@ namespace FoodyGo.Utils.DI
 
             foreach (FieldInfo fieldInfo in fieldInfos)
             {
-                if (fieldInfo.GetCustomAttribute<InjectAttribute>() != null)
-                {
-                    object value = container.Resolve(fieldInfo.FieldType);
+                var injectAttr = fieldInfo.GetCustomAttribute<InjectAttribute>();
 
-                    if (value != null)
-                        fieldInfo.SetValue(target, value);
+                if (injectAttr != null)
+                {
+                    object value = null;
+                    if (!string.IsNullOrEmpty(injectAttr.Key))
+                        value = container.Resolve(fieldInfo.FieldType, injectAttr.Key);
+                    else
+                        value = container.Resolve(fieldInfo.FieldType);
+
+                    fieldInfo.SetValue(target, value);
                 }
             }
         }
