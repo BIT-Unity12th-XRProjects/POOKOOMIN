@@ -12,12 +12,15 @@ public class GoogleFitUtil
         return;
 
 #elif UNITY_ANDROID
+        Debug.Log("Requesting Google Fit OAuth...");
         using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
         using (var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
         using (var intent = new AndroidJavaObject("android.content.Intent"))
         {
+            Debug.Log("Starting Google Fit Permission Activity...");
             intent.Call<AndroidJavaObject>("setClass", activity,
                 new AndroidJavaClass("com.example.usergooglefit.googleFitPermissionActivity"));
+            Debug.Log("Starting Activity...");
             activity.Call("startActivity", intent);
         }
 #endif

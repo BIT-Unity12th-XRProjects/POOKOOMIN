@@ -249,7 +249,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2845594}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.031167932, y: 1.1548607, z: -0.01860645}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -776,8 +776,9 @@ MonoBehaviour:
   MapSceneName: Map
   SplashSceneName: Splash
   CatchSceneName: Catch
-  MonsterLayerName: Monster
   _touchStartAction: {fileID: -5294675658595311393, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _titleUICanvas: {fileID: 513098611}
+  _titleCamera: {fileID: 2845597}
 --- !u!4 &963455278
 Transform:
   m_ObjectHideFlags: 0
