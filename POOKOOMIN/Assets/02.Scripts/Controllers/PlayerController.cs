@@ -18,6 +18,9 @@ namespace Pookoomin.Controller
         [SerializeField] LayerMask _battleMask;
         [SerializeField] PlayerRenderer _renderer;
 
+        //@TK 임시
+        private PetController _pet;
+
         /// <summary>
         /// 움직임 이벤트 : 파라미터는 움직임 값
         /// </summary>
@@ -49,7 +52,6 @@ namespace Pookoomin.Controller
         [SerializeField] GoogleMapTileManager _mapTileManager;
         [SerializeField] InputActionReference _moveInputAction;
 
-
         IEnumerator Start()
         {
             yield return new WaitUntil(() => _mapTileManager.isInitialized);
@@ -61,6 +63,10 @@ namespace Pookoomin.Controller
             _moveInputAction.action.performed += OnMovePerformed;
             _moveInputAction.action.canceled += OnMoveCanceled;
             _moveInputAction.action.Enable();
+
+            GameObject petObj = Resources.Load<GameObject>("Entity/Pet/LittleSquirrel");
+            _pet = Instantiate(petObj, transform.position + new Vector3(3f, 0f, 3f), Quaternion.identity).GetComponent<PetController>();
+            _pet.InitData(PetMode.Walk, transform);
         }
 
         private void OnDisable()
@@ -68,6 +74,8 @@ namespace Pookoomin.Controller
             _moveInputAction.action.performed -= OnMovePerformed;
             _moveInputAction.action.canceled -= OnMoveCanceled;
             _moveInputAction.action.Disable();
+
+            Destroy(_pet.gameObject);
         }
 
         private void OnMovePerformed(InputAction.CallbackContext context)
@@ -128,6 +136,15 @@ namespace Pookoomin.Controller
 
             _currentSpeed = 0;
             _animSpeed = 0;
+
+            GameObject petObj = Resources.Load<GameObject>("Entity/Pet/LittleSquirrel");
+            _pet = Instantiate(petObj, transform.position + new Vector3(3f, 0f, 3f), Quaternion.identity).GetComponent<PetController>();
+            _pet.InitData(PetMode.Walk, transform);
+        }
+
+        private void OnDisable()
+        {
+            Destroy(_pet.gameObject);
         }
 
         private void FixedUpdate()

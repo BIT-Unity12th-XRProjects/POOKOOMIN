@@ -7,8 +7,12 @@ namespace Pookoomin.UI
     {
         public UIInGameButtonsController(UIInGamebuttonsView view, object model) : base(view, null) { }
 
+        ARContentManager _contentManager;
+
         public override void BindInputEvents()
         {
+            GameManager.instance.onChangeGameState += OnChangeGameState;
+
             view.BackButton.onClick.RemoveAllListeners();
             view.SortButton.onClick.RemoveAllListeners();
             view.ARCameraButton.onClick.RemoveAllListeners();
@@ -27,6 +31,10 @@ namespace Pookoomin.UI
         public void OnClickSortButton()
         {
             //TODO : 펫 정렬시키기
+            if (_contentManager == null)
+                _contentManager = Object.FindFirstObjectByType<ARContentManager>();
+
+            _contentManager.PlaceObjectAtCenter();
         }
 
         public void OnClickARCameraButton()
@@ -35,6 +43,20 @@ namespace Pookoomin.UI
             //현재모드를 AR카메라 모드로 바꾸기
             //현재 GameManager의 namespace가 FoodyGo로 되어있음 추후 수정 필요
             GameManager.instance.ChangeGameState(GameState.ARCamera);
+        }
+
+        public void OnChangeGameState(GameState state)
+        {
+            if (state == GameState.ARCamera)
+            {
+                view.SortButton.interactable = true;
+                view.ARCameraButton.interactable = false;
+            }
+            else if (state == GameState.Lobby)
+            {
+                view.SortButton.interactable = false;
+                view.ARCameraButton.interactable = true;
+            }
         }
     }
 }

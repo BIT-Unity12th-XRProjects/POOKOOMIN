@@ -8,24 +8,40 @@ using UnityEngine.XR.ARFoundation;
 public class ARContentManager : MonoBehaviour
 {
     private ARRaycastManager arRaycastManager;
+    public Transform arCameraTransform;
 
     private List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     private NavMeshAgent agent;
 
-    public GameObject agentPrefab;
     public GameObject groundPrefab;
 
+    private GameObject _instancePet;
     private GameObject _instanceGround;
 
+    private GameObject agentPrefab;
     private bool isFirst = true;
+    private bool isMovingToTarget = false;
+    private Vector3 lastTargetPosition;
 
     private void Start()
     {
+        agentPrefab = Resources.Load<GameObject>("Entity/Pet/LittleSquirrel");
         arRaycastManager = GetComponent<ARRaycastManager>();
     }
 
-    
+    private void OnEnable()
+    {
+        
+    }
+
+    private void OnDisable()
+    {
+        Destroy(_instancePet);
+        Destroy(_instanceGround);
+    }
+
+
     public void PlaceObjectAtCenter()
     {
         // 화면 정중앙 좌표 (픽셀 단위)
@@ -44,8 +60,15 @@ public class ARContentManager : MonoBehaviour
                 // NavMeshSurface 빌드를 한 프레임 뒤에 수행 (Mesh 초기화 문제 방지)
                 StartCoroutine(BuildNavMeshNextFrame(_instanceGround));
 
-                GameObject instanceAgent = Instantiate(agentPrefab, hitPose.position, hitPose.rotation);
-                agent = instanceAgent.GetComponent<NavMeshAgent>();
+                _instancePet = Instantiate(agentPrefab, hitPose.position, hitPose.rotation);
+                _instancePet.GetComponent<PetController>().InitData(PetMode.ARCamera);
+                Vector3 lookTarget = new Vector3(
+                    arCameraTransform.position.x,
+                    _instancePet.transform.position.y, // 펫의 y값으로 고정
+                    arCameraTransform.position.z
+                );
+                _instancePet.transform.LookAt(lookTarget);
+                agent = _instancePet.AddComponent<NavMeshAgent>();
             }
             else
             {
@@ -55,10 +78,33 @@ public class ARContentManager : MonoBehaviour
 
                 // 이미 생성된 경우, 해당 위치로 이동 명령
                 agent.SetDestination(hitPose.position);
+                agent.SetDestination(hitPose.position);
+                isMovingToTarget = true;
+                lastTargetPosition = hitPose.position;
             }
         }
     }
-    
+
+    private void Update()
+    {
+        if (isMovingToTarget && agent != null && !agent.pathPending)
+        {
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    Vector3 lookTarget = new Vector3(
+                        arCameraTransform.position.x,
+                        _instancePet.transform.position.y, // 펫의 y값으로 고정
+                        arCameraTransform.position.z
+                    );
+                    _instancePet.transform.LookAt(lookTarget);
+                    isMovingToTarget = false;
+                }
+            }
+        }
+    }
+
     private IEnumerator BuildNavMeshNextFrame(GameObject ground)
     {
         yield return null; // 1프레임 대기
