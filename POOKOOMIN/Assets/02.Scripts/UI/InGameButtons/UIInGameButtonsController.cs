@@ -52,7 +52,7 @@ namespace Pookoomin.UI
                 view.SortButton.interactable = true;
                 view.ARCameraButton.interactable = false;
             }
-            else if (state == GameState.Lobby)
+            else if (state == GameState.Lobby || state == GameState.Walk)
             {
                 view.SortButton.interactable = false;
                 view.ARCameraButton.interactable = true;

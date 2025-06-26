@@ -63,7 +63,7 @@ public class PetController : MonoBehaviour
         {
             SetMeshVisible(false);
         }
-        else if (state == GameState.Lobby)
+        else if (state == GameState.Lobby || state == GameState.Walk)
         {
             SetMeshVisible(true);
         }

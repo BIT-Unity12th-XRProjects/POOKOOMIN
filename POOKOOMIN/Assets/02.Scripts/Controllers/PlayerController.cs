@@ -32,7 +32,7 @@ namespace Pookoomin.Controller
             {
                 _renderer.SetMeshVisible(false);
             }
-            else if(state == GameState.Lobby)
+            else if(state == GameState.Lobby || state == GameState.Walk)
             {
                 _renderer.SetMeshVisible(true);
             }
