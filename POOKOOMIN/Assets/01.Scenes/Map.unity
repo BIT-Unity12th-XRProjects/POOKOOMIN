@@ -635,8 +635,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e22760d984c7854788577937ae9e238, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pinchInputAction: {fileID: -6891988571643960275, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  _scrollInputAction: {fileID: -3021023402396618202, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _pinchInputAction: {fileID: -6410716025360274430, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _scrollInputAction: {fileID: -2927241470888200571, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   zoomSpeed: 5
   minFOV: 30
   maxFOV: 60
@@ -1520,8 +1520,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e22760d984c7854788577937ae9e238, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pinchInputAction: {fileID: -6891988571643960275, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  _scrollInputAction: {fileID: -3021023402396618202, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _pinchInputAction: {fileID: -6410716025360274430, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _scrollInputAction: {fileID: -2927241470888200571, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   zoomSpeed: 5
   minFOV: 30
   maxFOV: 60
