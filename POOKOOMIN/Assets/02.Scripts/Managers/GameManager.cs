@@ -99,8 +99,8 @@ namespace FoodyGo.Managers
             yield return SceneManager.LoadSceneAsync(CatchSceneName, LoadSceneMode.Additive);
             ActiveAdditiveScene(MapSceneName);
             yield return SceneManager.UnloadSceneAsync(SplashSceneName);
-            stateStack.Push(GameState.Lobby);
-            ChangeGameState(GameState.Lobby);
+            stateStack.Push(GameState.Walk);
+            ChangeGameState(GameState.Walk);
 
             if (_touchStartAction != null)
             {

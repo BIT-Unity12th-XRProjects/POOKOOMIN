@@ -110,7 +110,7 @@ namespace Pookoomin.Controller
         }
 #elif UNITY_ANDROID
         
-        [Inject] GPSLocationService _gpsLocationService;
+        [Inject("GPSServices”)] GPSLocationService _gpsLocationService;
 
         //속력 계산
         private double _prevLatitude;
