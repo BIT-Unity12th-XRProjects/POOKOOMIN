@@ -9,6 +9,7 @@ using FoodyGo.UI;
 using Pookoomin.UI;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using Pookoomin.Manager;
 
 namespace FoodyGo.Managers
 {
@@ -85,6 +86,7 @@ namespace FoodyGo.Managers
         // Use this for initialization
         private void Start()
         {
+            SoundManager.instance.PlayBGM(BGM.Title, 0);
             currentState = GameState.None;
 
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
@@ -120,6 +122,9 @@ namespace FoodyGo.Managers
             yield return SceneManager.LoadSceneAsync(CatchSceneName, LoadSceneMode.Additive);
             ActiveAdditiveScene(MapSceneName);
             yield return SceneManager.UnloadSceneAsync(SplashSceneName);
+
+            SoundManager.instance.PlayBGM(BGM.Main);
+
             stateStack.Push(GameState.Walk);
             ChangeGameState(GameState.Walk);
 

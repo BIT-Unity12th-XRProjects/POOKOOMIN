@@ -1,4 +1,5 @@
 using FoodyGo.Managers;
+using Pookoomin.Manager;
 using UnityEngine;
 
 namespace Pookoomin.UI
@@ -24,12 +25,13 @@ namespace Pookoomin.UI
 
         public void OnClickBackButton()
         {
-            //TODO : 이전 상태(모드)로 돌아가기
+            SoundManager.instance.PlaySFX(SFX.Click);
             GameManager.instance.ChangeBackState();
         }
 
         public void OnClickSortButton()
         {
+            SoundManager.instance.PlaySFX(SFX.SqueakerToy);
             //TODO : 펫 정렬시키기
             if (_contentManager == null)
                 _contentManager = Object.FindFirstObjectByType<ARContentManager>();
@@ -39,8 +41,7 @@ namespace Pookoomin.UI
 
         public void OnClickARCameraButton()
         {
-            //TODO : AR카메라로 전환
-            //현재모드를 AR카메라 모드로 바꾸기
+            SoundManager.instance.PlaySFX(SFX.Click);
             //현재 GameManager의 namespace가 FoodyGo로 되어있음 추후 수정 필요
             GameManager.instance.ChangeGameState(GameState.ARCamera);
         }

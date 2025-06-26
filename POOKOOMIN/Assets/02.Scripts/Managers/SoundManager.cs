@@ -1,5 +1,6 @@
 using FoodyGo.Singletons;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace Pookoomin.Manager
 {
     public enum BGM
     {
+        Title,
         Main,
     }
     public enum SFX
@@ -14,7 +16,7 @@ namespace Pookoomin.Manager
         Click, 
         Click2, 
         CameraFlash, 
-        DuckToy,
+        SqueakerToy,
     }
 
     public class SoundManager : Singleton<SoundManager>
@@ -24,6 +26,8 @@ namespace Pookoomin.Manager
 
         private Dictionary<BGM, AudioClip> bgmClips = new Dictionary<BGM, AudioClip>();
         private Dictionary<SFX, AudioClip> sfxClips = new Dictionary<SFX, AudioClip>();
+
+        private Coroutine currentBGMCoroutine;
 
         private void Awake()
         {
@@ -69,15 +73,59 @@ namespace Pookoomin.Manager
 
         }
 
-        public void PlayBGM(BGM type)
+        public void PlayBGM(BGM type, float fadeDuration = 0.5f)
         {
             if (bgmClips.ContainsKey(type))
             {
-                bgmSource.clip = bgmClips[type];
-                bgmSource.loop = true;
-                bgmSource.Play();
+                if (currentBGMCoroutine != null)
+                { 
+                    StopCoroutine(currentBGMCoroutine);
+                }
+
+                currentBGMCoroutine = StartCoroutine(FadeOutBGM(fadeDuration, () =>
+                {
+                    bgmSource.clip = bgmClips[type];
+                    bgmSource.loop = true;
+                    bgmSource.Play();
+                    currentBGMCoroutine = StartCoroutine(FadeInBGM(fadeDuration)); 
+                }));
+
             }
         }
+
+        public void SetBGMVolume(float volume)
+        {
+            bgmSource.volume = Mathf.Clamp(volume, 0, 1);
+        }
+
+        private IEnumerator FadeOutBGM(float duration, Action onFadeComplete)
+        {
+            float startVolume = bgmSource.volume;
+            for (float t = 0; t < duration; t += Time.deltaTime)
+            {
+                bgmSource.volume = Mathf.Lerp(startVolume, 0f, t / duration);
+                yield return null;
+            }
+
+            bgmSource.volume = 0;  
+            onFadeComplete?.Invoke(); 
+        }
+
+        private IEnumerator FadeInBGM(float duration)
+        {
+            float startVolume = 0f;
+            bgmSource.volume = 0f;
+
+            for (float t = 0; t < duration; t += Time.deltaTime)
+            {
+                bgmSource.volume = Mathf.Lerp(startVolume, 1f, t / duration);
+                yield return null;
+            }
+
+            bgmSource.volume = 1.0f;
+        }
+
+
 
         public void PlaySFX(SFX type)
         {
