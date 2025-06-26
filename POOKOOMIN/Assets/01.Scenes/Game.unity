@@ -778,6 +778,8 @@ MonoBehaviour:
   CatchSceneName: Catch
   MonsterLayerName: Monster
   _touchStartAction: {fileID: -5294675658595311393, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  _titleUICanvas: {fileID: 513098611}
+  _titleCamera: {fileID: 2845597}
 --- !u!4 &963455278
 Transform:
   m_ObjectHideFlags: 0

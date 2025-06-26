@@ -45,8 +45,12 @@ namespace FoodyGo.Managers
 
         public Action<GameState> onChangeGameState;
 
+        [Header("Title Scene References")]
         [SerializeField] private InputActionReference _touchStartAction;
         private bool _hasStarted = false;
+        [SerializeField] private GameObject _titleUICanvas;
+        [SerializeField] private Camera _titleCamera;
+
 
         private void Awake()
         {
@@ -88,7 +92,18 @@ namespace FoodyGo.Managers
             if (_hasStarted)
                 return;
             
-                _hasStarted = true;
+            _hasStarted = true;
+
+            if (_titleUICanvas != null)
+            {
+                _titleUICanvas.SetActive(false);
+            }
+
+            if (_titleCamera != null)
+            {
+                _titleCamera.gameObject.SetActive(false);
+            }
+
             StartCoroutine(LoadScenes());
         }
 
