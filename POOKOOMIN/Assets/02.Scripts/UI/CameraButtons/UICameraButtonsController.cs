@@ -1,3 +1,4 @@
+using Pookoomin.Manager;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -37,6 +38,8 @@ namespace Pookoomin.UI
 
         public void OnClickCameraButton()
         {
+            SoundManager.instance.PlaySFX(SFX.CameraFlash);
+
             arCamera?.CaptureImage();
 
             arCamera?.CaptureImage((texture) =>
@@ -47,6 +50,7 @@ namespace Pookoomin.UI
 
         public void OnClickAlbumButton()
         {
+            SoundManager.instance.PlaySFX(SFX.Click2);
             PictureUtil.OpenGallery();
         }
     }
