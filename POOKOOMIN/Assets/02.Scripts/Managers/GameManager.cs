@@ -54,6 +54,12 @@ namespace FoodyGo.Managers
 
         private void Awake()
         {
+            //화면 고정
+            Screen.orientation = ScreenOrientation.Portrait;
+            Screen.autorotateToLandscapeLeft = false;
+            Screen.autorotateToLandscapeRight = false;
+            Screen.autorotateToPortraitUpsideDown = false;
+
             userWorkDataLoader = new DataLoader<UserWorkData, UserWorkDataRaw>(typeof(UserWorkData).Name + ".json");
             userWorkData = userWorkDataLoader.Load();
         }
@@ -114,8 +120,8 @@ namespace FoodyGo.Managers
             yield return SceneManager.LoadSceneAsync(CatchSceneName, LoadSceneMode.Additive);
             ActiveAdditiveScene(MapSceneName);
             yield return SceneManager.UnloadSceneAsync(SplashSceneName);
-            stateStack.Push(GameState.Lobby);
-            ChangeGameState(GameState.Lobby);
+            stateStack.Push(GameState.Walk);
+            ChangeGameState(GameState.Walk);
 
             if (_touchStartAction != null)
             {
@@ -167,7 +173,7 @@ namespace FoodyGo.Managers
             } 
 
             //@TK : UI작업 분리
-            if(state == GameState.Lobby)
+            if(state == GameState.Walk)
             {
                 Pookoomin.UI.UIManager.instance.OpenUI<UIUserWorkDataController, UIUserWorkDataView, UserWorkData>(userWorkData);
                 Pookoomin.UI.UIManager.instance.OpenUI<UIInGameButtonsController, UIInGamebuttonsView, object>(null);

@@ -1,10 +1,14 @@
 using FoodyGo.Managers;
+using Unity.Cinemachine;
 using UnityEngine;
 
 
 public class MainCameraController : MonoBehaviour
 {
     private Camera camera;
+    [SerializeField] private CinemachineCamera freeLockCam;
+    [SerializeField] private CinemachineCamera topViewCam;
+
 
     private void Start()
     {
@@ -21,6 +25,14 @@ public class MainCameraController : MonoBehaviour
         else
         {
             camera.enabled = true;
+            if (currentState == GameState.Lobby)
+            {
+                topViewCam?.gameObject.SetActive(false);
+            }
+            else if (currentState == GameState.Walk)
+            {
+                topViewCam?.gameObject.SetActive(true);
+            }
         }
     }
 
