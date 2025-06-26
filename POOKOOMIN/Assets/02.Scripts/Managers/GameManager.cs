@@ -8,6 +8,7 @@ using FoodyGo.Controllers;
 using FoodyGo.UI;
 using Pookoomin.UI;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 namespace FoodyGo.Managers
 {
@@ -44,29 +45,67 @@ namespace FoodyGo.Managers
 
         public Action<GameState> onChangeGameState;
 
+        [SerializeField] private InputActionReference _touchStartAction;
+        private bool _hasStarted = false;
+
         private void Awake()
         {
             userWorkDataLoader = new DataLoader<UserWorkData, UserWorkDataRaw>(typeof(UserWorkData).Name + ".json");
             userWorkData = userWorkDataLoader.Load();
         }
 
-        // Use this for initialization
-        IEnumerator Start()
+        private void OnEnable()
         {
+            if (_touchStartAction != null)
+            {
+                _touchStartAction.action.Enable();
+                _touchStartAction.action.performed += OnTouchStart;
+            }
+        }
 
+        private void OnDisable()
+        {
+            if (_touchStartAction != null)
+            {
+                _touchStartAction.action.performed -= OnTouchStart;
+                _touchStartAction.action.Disable();
+            }
+        }
+
+        // Use this for initialization
+        private void Start()
+        {
             currentState = GameState.None;
 
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
             stateStack = new Stack<GameState>();
 
+            GoogleFitUtil.RequestGoogleFitOAuth();
+        }
+
+        private void OnTouchStart(InputAction.CallbackContext context)
+        {
+            if (_hasStarted)
+                return;
+            
+                _hasStarted = true;
+            StartCoroutine(LoadScenes());
+        }
+
+        private IEnumerator LoadScenes()
+        {
             yield return SceneManager.LoadSceneAsync(SplashSceneName, LoadSceneMode.Additive);
             yield return SceneManager.LoadSceneAsync(MapSceneName, LoadSceneMode.Additive);
-            GoogleFitUtil.RequestGoogleFitOAuth();
             yield return SceneManager.LoadSceneAsync(CatchSceneName, LoadSceneMode.Additive);
             ActiveAdditiveScene(MapSceneName);
             yield return SceneManager.UnloadSceneAsync(SplashSceneName);
             stateStack.Push(GameState.Lobby);
             ChangeGameState(GameState.Lobby);
+
+            if (_touchStartAction != null)
+            {
+                _touchStartAction.action.Disable();
+            }
         }
 
         //run when a new scene is loaded
