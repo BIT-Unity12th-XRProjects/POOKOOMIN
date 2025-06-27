@@ -32,7 +32,7 @@ public class googleFitPermissionActivity extends Activity {
 
                 return; // 권한 요청 후 종료, 결과는 onRequestPermissionsResult에서 처리
             }
-        }
+        }   
 
         requestFitPermissions();
     }
