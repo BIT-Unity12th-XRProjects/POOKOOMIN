@@ -14,7 +14,9 @@ public class GallaryData
         set
         {
             if (thumbnailImage != null && thumbnailImage.Equals(value))
+            {
                 return;
+            }
 
             thumbnailImage = value;
             onChangedThumbnail?.Invoke(value);

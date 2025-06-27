@@ -40,8 +40,6 @@ namespace Pookoomin.UI
         {
             SoundManager.instance.PlaySFX(SFX.CameraFlash);
 
-            arCamera?.CaptureImage();
-
             arCamera?.CaptureImage((texture) =>
             {
                 model.ThumbnailImage = texture;

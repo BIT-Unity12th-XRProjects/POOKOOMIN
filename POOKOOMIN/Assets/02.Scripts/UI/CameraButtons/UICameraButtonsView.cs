@@ -10,7 +10,7 @@ namespace Pookoomin.UI
         [SerializeField] private Button reloadButton;
         [SerializeField] private Button cameraButton;
         [SerializeField] private Button albumButton;
-        [SerializeField] private Image albumImage; //First gallary in Image
+        [SerializeField] private RawImage albumImage; //First gallary in Image
 
         public Button ReloadButton => reloadButton;
         public Button CameraButton => cameraButton;
@@ -20,16 +20,10 @@ namespace Pookoomin.UI
         {
             if (texture == null)
             {
-                albumImage.sprite = null;
+                albumImage.texture = null;
                 return;
             }
-
-            Sprite sprite = Sprite.Create(
-                texture,
-                new Rect(0, 0, texture.width, texture.height),
-                new Vector2(0.5f, 0.5f)
-            );
-            albumImage.sprite = sprite;
+            albumImage.texture = texture;
         }
     }
 }

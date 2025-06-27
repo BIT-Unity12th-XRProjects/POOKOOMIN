@@ -22,7 +22,6 @@ public class ARCameraCapture : MonoBehaviour
         Texture2D texture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
         texture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
         texture.Apply();
-        onCaptured?.Invoke(texture);
 
         // 저장 경로 및 파일명 설정
         string fileName = $"ARCapture_{DateTime.Now:yyyyMMdd_HHmmss}.png";
@@ -31,8 +30,7 @@ public class ARCameraCapture : MonoBehaviour
         File.WriteAllBytes(filePath, texture.EncodeToPNG());
         PictureUtil.SaveImageToGallery(filePath);
 
-        // Optional: UI 팝업 띄우기
-        // UIManager.Instance.ShowToast("사진이 저장되었습니다.");
+        onCaptured?.Invoke(PictureUtil.LoadThumbnailToGallary());
 
         Destroy(texture);
     }

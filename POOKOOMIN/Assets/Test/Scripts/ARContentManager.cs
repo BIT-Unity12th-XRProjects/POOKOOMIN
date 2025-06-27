@@ -27,6 +27,8 @@ public class ARContentManager : MonoBehaviour
     private void Start()
     {
         agentPrefab = Resources.Load<GameObject>("Entity/Pet/LittleSquirrel");
+        //@tk : ar용에 맞게 스케일 조정
+        agentPrefab.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         arRaycastManager = GetComponent<ARRaycastManager>();
     }
 

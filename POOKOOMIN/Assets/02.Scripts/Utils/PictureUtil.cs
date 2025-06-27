@@ -42,7 +42,7 @@ public static class PictureUtil
             string base64 = galleryClass.CallStatic<string>("getFirstImage", currentActivity);
             Debug.Log($"@@@base64 is null : {base64 == null}");
             Texture2D tex = UIUtil.Base64ToTexture2D(base64);
-            Debug.Log($"@@@tex is null : {base64 == null}");
+            Debug.Log($"@@@tex is null : {tex == null}");
             return tex;
         }
         catch (System.Exception e)
