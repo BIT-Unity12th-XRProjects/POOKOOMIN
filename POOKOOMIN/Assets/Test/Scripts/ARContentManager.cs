@@ -7,6 +7,7 @@ using UnityEngine.XR.ARFoundation;
 
 public class ARContentManager : MonoBehaviour
 {
+    private ARPlaneManager planeManager;
     private ARRaycastManager arRaycastManager;
     public Transform arCameraTransform;
 
@@ -24,23 +25,28 @@ public class ARContentManager : MonoBehaviour
     private bool isMovingToTarget = false;
     private Vector3 lastTargetPosition;
 
-    private void Start()
+    private void Awake()
     {
         agentPrefab = Resources.Load<GameObject>("Entity/Pet/LittleSquirrel");
-        //@tk : ar용에 맞게 스케일 조정
         agentPrefab.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         arRaycastManager = GetComponent<ARRaycastManager>();
+        planeManager = GetComponent<ARPlaneManager>();
     }
 
     private void OnEnable()
     {
-        
+        if (planeManager.enabled == false)
+        {
+            planeManager.enabled = true;
+        }
     }
 
     private void OnDisable()
     {
+        isFirst = true;
         Destroy(_instancePet);
         Destroy(_instanceGround);
+        ClearAllPlanes();
     }
 
 
@@ -113,5 +119,21 @@ public class ARContentManager : MonoBehaviour
 
         // NavMeshSurface 컴포넌트를 찾아 NavMesh를 생성
         ground.GetComponent<NavMeshSurface>().BuildNavMesh();
+    }
+
+    private void ClearAllPlanes()
+    {
+        if (planeManager == null || planeManager.trackables == null) return;
+        
+        planeManager.enabled = false;
+
+        foreach (var plane in planeManager.trackables)
+        {
+            if (plane != null)
+            {
+                plane.gameObject.SetActive(false);
+            }
+               
+        }
     }
 }
